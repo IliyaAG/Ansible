@@ -1,0 +1,7 @@
+- name: Install Jenkins master
+  import_tasks: setup_master.yml
+  when: jenkins_role == "master"
+
+- name: Install Jenkins Agent
+  import_tasks: setup_agent.yml
+  when: jenkins_role == "agent"

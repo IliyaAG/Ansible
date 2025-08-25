@@ -1,0 +1,36 @@
+networks:
+  web_net:
+    name: web_net
+    external: true
+  app_net:
+    name: app_net
+    external: true
+
+services:
+  jenkins:
+    image: jenkins/jenkins:${image_tag}
+    container_name: jenkins
+    hostname: jenkins
+    restart: ${restart_policy}
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    {% if not use_traefik %}
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    {% endif %}
+    networks:
+      - web_net
+      - app_net
+    {% if use_traefik %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.http-.rule=Host(`{{ jenkins_main_domain }}`)"
+      - "traefik.http.routers.http-.entrypoints=web"
+      - "traefik.http.routers..rule=Host(`{{ jenkins_main_domain }}`)"
+      - "traefik.http.routers..entrypoints=web-secure"
+      - "traefik.http.routers..tls=true"
+      - "traefik.http.routers..tls.certresolver=myresolver"
+      - "traefik.http.routers..service=repo"
+      - "traefik.http.services..loadBalancer.server.port=8080"
+    {% endif %}

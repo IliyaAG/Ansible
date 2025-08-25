@@ -1,0 +1,29 @@
+- name: Copy file
+  ansible.builtin.copy:
+    src: pip.conf
+    dest: /root/.config/pip/pip.conf
+  tags:
+    - preparing
+
+- name: Install multi python packages
+  ansible.builtin.pip:
+    name:
+      - docker
+      - PyYAML==5.3.1
+      - docker-compose
+  tags:
+    - preparing
+    - docker
+
+- name: Create a docker network with name
+  docker_network:
+    name: "{{ item }}"
+    driver_options:
+      com.docker.network.bridge.name: "{{ item }}"
+  loop:
+    - web_net
+    - app_net
+  tags:
+    - preparing
+    - docker
+
