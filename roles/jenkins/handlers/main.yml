@@ -7,3 +7,5 @@
     state: restarted
     enabled: true
 
+- name: Reload systemd
+  command: systemctl daemon-reload

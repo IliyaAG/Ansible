@@ -1,8 +1,23 @@
+- name: Ensure tomcat group exists
+  group:
+    name: "{{ tomcat_user }}"
+    state: present
+
+- name: Ensure tomcat user exists
+  user:
+    name: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    home: "{{ service_dir }}"
+    shell: /bin/false
+    system: yes
+
 - name: Creates directory
   ansible.builtin.file:
     path: "{{ service_dir }}"
     state: directory
     mode: "0755"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
   tags:
     - preparing
 
@@ -32,9 +47,27 @@
     - preparing
 
 - name: Symlink latest Tomcat
-      file:
-        src: "{{ service_dir }}/apache-tomcat-{{ tomcat_version }}"
-        dest: "{{ service_dir }}/latest"
-        state: link
+  ansible.builtin.file:
+    src: "{{ service_dir }}/apache-tomcat-{{ tomcat_version }}"
+    dest: "{{ service_dir }}/latest"
+    state: link
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+  tags:
+    - preparing
+
+- name: Copy file with owner and permissions
+  ansible.builtin.template:
+    src: etc/systemd/system/tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service.j2
+  notify: Reload systemd
+  tags:
+    - preparing
+
+- name: Enable and start Tomcat service
+  ansible.builtin.systemd:
+    name: tomcat
+    enabled: yes
+    state: started
   tags:
     - preparing
