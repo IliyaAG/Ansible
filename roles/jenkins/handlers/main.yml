@@ -1,2 +1,9 @@
 ---
 # handlers file for jenkins
+
+- name: restart docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+    enabled: true
+

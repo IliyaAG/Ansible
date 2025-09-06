@@ -1,0 +1,40 @@
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ service_dir }}"
+    state: directory
+    mode: "0755"
+  tags:
+    - preparing
+
+- name: install tomcat depandencies
+  ansible.builtin.package:
+    name: "{{ java_packages }}"
+    state: present
+  tags:
+    - preparing
+
+- name: Download Tomcat tarball
+  get_url:
+    url: "{{ tomcat_url }}"
+    dest: "/tmp/{{ tomcat_tarball }}"
+    mode: "0644"
+    checksum: "sha512:{{ tomcat_url }}.sha512"
+  tags:
+    - preparing
+
+- name: Extract Tomcat archive
+  unarchive:
+    src: "/tmp/{{ tomcat_tarball }}"
+    dest: "{{ service_dir }}"
+    remote_src: yes
+    creates: "{{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}"
+  tags:
+    - preparing
+
+- name: Symlink latest Tomcat
+      file:
+        src: "{{ service_dir }}/apache-tomcat-{{ tomcat_version }}"
+        dest: "{{ service_dir }}/latest"
+        state: link
+  tags:
+    - preparing
