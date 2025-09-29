@@ -1,0 +1,38 @@
+---
+- name: Ensure node exporter group exists
+  group:
+    name: "{{ node_exporter_user }}"
+    state: present
+
+- name: Ensure node exporter user exists
+  user:
+    name: "{{ node_exporter_user }}"
+    group: "{{ node_exporter_user }}"
+    home: "{{ service_dir }}"
+    shell: /bin/false
+    system: yes 
+
+- name: Download node exporter tarball
+  get_url:
+    url: "{{ tomcat_url }}"
+    dest: "/tmp/{{ node_exporter_tarball }}"
+    mode: "0755"
+
+- name: Extract node exporter archive
+  unarchive:
+    src: "/tmp/{{ node_exporter_tarball }}"
+    dest: "{{ service_dir }}"
+    remote_src: yes
+    creates: "{{ node_exporter_install_dir }}/node_exporter
+
+- name: Copy file with owner and permissions
+  ansible.builtin.template:
+    src: etc/systemd/system/node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service.j2
+  notify: Reload systemd
+
+- name: Enable and start node exporter service
+  ansible.builtin.systemd:
+    name: tomcat
+    enabled: yes
+    state: started
