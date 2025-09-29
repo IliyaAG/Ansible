@@ -1,2 +1,10 @@
 ---
 # handlers file for prometheus
+- name: restart docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+    enabled: true
+
+- name: Reload systemd
+  command: systemctl daemon-reload
