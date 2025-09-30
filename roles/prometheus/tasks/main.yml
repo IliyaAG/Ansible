@@ -1,2 +1,4 @@
 ---
 # tasks file for prometheus
+- name: setup node exporter as a systemd unit file
+  import_tasks: node-exporter-systemd.yml
