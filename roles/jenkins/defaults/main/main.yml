@@ -1,2 +1,7 @@
 ---
 # defaults file for jenkins
+jenkins_restart_policy:
+
+jenkins_image_tag:
+
+jenkins_main_domain:
