@@ -5,3 +5,9 @@ jenkins_restart_policy:
 jenkins_image_tag:
 
 jenkins_main_domain:
+
+tomcat_user:
+
+tomcat_url:
+
+java_packages:
