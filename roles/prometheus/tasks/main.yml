@@ -1,4 +1,5 @@
 ---
 # tasks file for prometheus
-- name: setup node exporter as a systemd unit file
-  import_tasks: node-exporter-systemd.yml
+- name: setup node exporter
+  include_tasks: "node-exporter-{{node_exporter_type}}.yml"
+  when: node_exporter_type in ['docker', 'systemd']
