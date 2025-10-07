@@ -1,3 +1,5 @@
 ---
 # defaults file for prometheus
 node_exporter_type: systemd
+
+docker_net_name:
