@@ -1,5 +1,18 @@
 ---
 # defaults file for prometheus
+# =======================
+# node exporter variables
+# =======================
+# docker
 node_exporter_type: systemd
 
-docker_net_name:
+node_exporter_nets_name: 
+
+node_exporter_image_tag: v1.6.1
+
+node_exporter_restart_policy: on-failure
+
+node_exporter_hostname: node-exporter
+# =======================
+#  variables
+# =======================
