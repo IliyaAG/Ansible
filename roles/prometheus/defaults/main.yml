@@ -3,6 +3,7 @@
 # =======================
 # node exporter variables
 # =======================
+node_exporter_enable: true
 # docker
 node_exporter_type: systemd
 
