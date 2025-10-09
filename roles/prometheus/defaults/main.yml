@@ -4,7 +4,7 @@
 # node exporter variables
 # =======================
 node_exporter_enable: true
-# docker
+# ------- docker --------
 node_exporter_type: systemd
 
 node_exporter_nets_name: 
@@ -15,5 +15,8 @@ node_exporter_restart_policy: on-failure
 
 node_exporter_hostname: node-exporter
 # =======================
-#  variables
+#  prometheus variables
 # =======================
+prometheus_enable: false
+# ------- docker --------
+

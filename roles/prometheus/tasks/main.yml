@@ -2,4 +2,12 @@
 # tasks file for prometheus
 - name: setup node exporter
   include_tasks: "node-exporter-{{node_exporter_type}}.yml"
-  when: node_exporter_type in ['docker', 'systemd']
+  when: 
+    - node_exporter_enable | bool
+    - node_exporter_type in ['docker', 'systemd']
+
+- name: setup prometheus
+  include_tasks: "prometheus-{{prometheus_type}}.yml"
+  when:
+    - prometheus_enable | bool
+    - prometheus_type in ['docker', 'systemd']

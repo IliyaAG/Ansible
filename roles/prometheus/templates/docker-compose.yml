@@ -1,4 +1,37 @@
-node-exporter:
+services:
+  {% if prometheus_enable %}
+  prometheus:
+    image: prom/prometheus:v2.47.1
+    restart: ${PROMETHEUS_RESTART_POLICY}
+    container_name: ${PROMETHEUS_CONTAINER_NAME}
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus:/etc/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=30d
+      - --storage.tsdb.retention.size=150GB
+      - --web.enable-lifecycle
+    networks:
+      - "{{ node_exporter_nets_name }}"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web_net
+      - traefik.http.routers.prometheus.entrypoints=http
+      - traefik.http.routers.prometheus.rule=Host(`${PROSUB}.${DOMAIN_ADDRESS}`)
+      - traefik.http.routers.prometheus.middlewares=https-redirect
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.prometheus-secure.entrypoints=https
+      - traefik.http.routers.prometheus-secure.rule=Host(`${PROSUB}.${DOMAIN_ADDRESS}`)
+      - traefik.http.routers.prometheus-secure.tls=true
+      - traefik.http.routers.prometheus-secure.tls.options=default
+      - traefik.http.routers.prometheus-secure.middlewares=web-auth
+      - traefik.http.routers.prometheus-secure.tls.certresolver=mycert
+      - traefik.http.services.prometheus.loadbalancer.server.port=9090
+  {% endif %}
+  {% if node_exporter_enable %}
+  node-exporter:
     image: prom/node-exporter:${EXPORTER_TAG}
     restart: ${RESTART_POLICY}
     hostname: '${HOSTNAME}'
@@ -14,3 +47,4 @@ node-exporter:
       - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
     networks:
       - "{{ node_exporter_nets_name }}"
+  {% endif %}
