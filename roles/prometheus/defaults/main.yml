@@ -19,4 +19,10 @@ node_exporter_hostname: node-exporter
 # =======================
 prometheus_enable: false
 # ------- docker --------
+prometheus_image_tag: v2.47.1
 
+prometheus_networks:
+
+prometheus_restart_policy: on-failure
+
+traefik_enable: true

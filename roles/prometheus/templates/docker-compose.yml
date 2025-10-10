@@ -1,7 +1,7 @@
 services:
-  {% if prometheus_enable %}
+{% if prometheus_enable %}
   prometheus:
-    image: prom/prometheus:v2.47.1
+    image: prom/prometheus:${PROMETHEUS_TAG}
     restart: ${PROMETHEUS_RESTART_POLICY}
     container_name: ${PROMETHEUS_CONTAINER_NAME}
     volumes:
@@ -14,7 +14,13 @@ services:
       - --storage.tsdb.retention.size=150GB
       - --web.enable-lifecycle
     networks:
-      - "{{ node_exporter_nets_name }}"
+    {% for name, config in prometheus_networks.items() %}
+    {{name}}:
+      {% for key, value in config.items() %}
+      {{ key }}: {{ value }}
+      {% endfor %}
+    {% endfor %}
+  {% if traefik_enable %}
     labels:
       - traefik.enable=true
       - traefik.docker.network=web_net
@@ -30,7 +36,8 @@ services:
       - traefik.http.routers.prometheus-secure.tls.certresolver=mycert
       - traefik.http.services.prometheus.loadbalancer.server.port=9090
   {% endif %}
-  {% if node_exporter_enable %}
+{% endif %}
+{% if node_exporter_enable %}
   node-exporter:
     image: prom/node-exporter:${EXPORTER_TAG}
     restart: ${RESTART_POLICY}
@@ -46,5 +53,10 @@ services:
       - --collector.filesystem.ignored-mount-points
       - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
     networks:
-      - "{{ node_exporter_nets_name }}"
-  {% endif %}
+    {% for name, config in node_exporter_networks.items() %}
+    {{name}}:
+      {% for key, value in config.items() %}
+      {{ key }}: {{ value }}
+      {% endfor %}
+    {% endfor %}
+{% endif %}
