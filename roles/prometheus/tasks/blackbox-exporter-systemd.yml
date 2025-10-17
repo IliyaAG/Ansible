@@ -1,0 +1,7 @@
+- name: install blackbox exporter
+  prometheus.prometheus.blackbox_exporter
+  blackbox_exporter_binary_install_dir: {{ blackbox_install_dir }}
+  blackbox_exporter_system_user: {{ blackbox_user }}
+  blackbox_exporter_system_group: {{ blackbox_group }}
+  blackbox_exporter_version: {{ blackbox_version }}
+  blackbox_exporter_web_listen_address: {{ blackbox_listen_address }}
