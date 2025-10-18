@@ -1,0 +1,59 @@
+---
+- name: Copy file
+  ansible.builtin.copy:
+    src: pip.conf
+    dest: /root/.config/pip/pip.conf
+  tags:
+    - preparing
+
+- name: Install python packages
+  ansible.builtin.pip:
+    name:
+      - docker
+      - PyYAML==5.3.1
+      - docker-compose
+  tags:
+    - preparing
+    - docker
+
+- name: Create a docker network with name
+  docker_network:
+    name: "{{ docker_net_name }}"
+    driver_options:
+      com.docker.network.bridge.name: "{{ docker_net_name }}"
+  tags:
+    - preparing
+    - docker
+
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ service_dir }}"
+    state: directory
+  tags:
+    - preparing
+
+- name: Copy file with owner and permissions
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ service_dir }}/docker-compose.yml"
+  tags:
+    - preparing
+
+- name: Template a file to path
+  ansible.builtin.template:
+    src: .env.j2
+    dest: "{{ service_dir }}/.env"
+  tags:
+    - preparing
+
+- name: Pull images for project
+  community.docker.docker_compose_v2_pull:
+    project_src: "{{ service_dir }}"
+  tags:
+    - pull
+
+- name: deploy Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ service_dir }}"
+  tags:
+    - deploy
