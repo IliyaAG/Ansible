@@ -26,3 +26,17 @@ prometheus_networks:
 prometheus_restart_policy: on-failure
 
 traefik_enable: true
+# ============================
+#  blackbox exporter variables
+# ============================
+blackbox_enable: false
+# ------- systemd --------
+blackbox_install_dir: /usr/local/bin
+
+blackbox_user: blackbox-exp
+
+blackbox_group: blackbox-exp
+
+lackbox_version: "0.27.0"
+
+blackbox_listen_address: "0.0.0.0:9115"
