@@ -6,6 +6,12 @@
     - node_exporter_enable | bool
     - node_exporter_type in ['docker', 'systemd']
 
+- name: setup blackbox exporter
+  include_tasks: "blackbox-exporter-{{blackbox_exporter_type}}.yml"
+  when: 
+    - blackbox_exporter_enable | bool
+    - blackbox_exporter_type in ['docker', 'systemd']
+
 - name: setup prometheus
   include_tasks: "prometheus-{{prometheus_type}}.yml"
   when:
