@@ -4,8 +4,8 @@
 # node exporter variables
 # =======================
 node_exporter_enable: true
-# ------- docker --------
 node_exporter_type: systemd
+# ------- docker --------
 
 node_exporter_nets_name: 
 
@@ -29,7 +29,8 @@ traefik_enable: true
 # ============================
 #  blackbox exporter variables
 # ============================
-blackbox_enable: false
+blackbox_exporter_enable: false
+blackbox_exporter_type: systemd
 # ------- systemd --------
 blackbox_install_dir: /usr/local/bin
 
