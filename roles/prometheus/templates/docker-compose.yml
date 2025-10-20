@@ -60,3 +60,20 @@ services:
       {% endfor %}
     {% endfor %}
 {% endif %}
+{% if blackbox_exporter_enable %}
+  blackbox-exporter:
+    image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_TAG}
+    restart: ${BLACKBOX_RESTART_POLICY}
+    hostname: ${BLACKBOX_HOSTNAME}
+    container_name: blackbox-exporter
+    command:
+      - '--config.file=/etc/blackboxexporter/blackbox-exporter.yml'
+    volumes:
+      - ./blackbox:/etc/blackboxexporter
+    networks:
+    {% for name, config in blackbox_exporter_networks.items() %}
+    {{name}}:
+      {% for key, value in config.items() %}
+      {{ key }}: {{ value }}
+      {% endfor %}
+{% endif %}
