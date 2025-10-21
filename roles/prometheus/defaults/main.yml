@@ -31,6 +31,11 @@ traefik_enable: true
 # ============================
 blackbox_exporter_enable: false
 blackbox_exporter_type: systemd
+# ------- docker ---------
+blackbox_exporter_image_tag: 
+blackbox_exporter_restart_policy: on-failure
+blackbox_exporter_hostname: blackbox-exporter
+blackbox_exporter_networks:
 # ------- systemd --------
 blackbox_install_dir: /usr/local/bin
 
