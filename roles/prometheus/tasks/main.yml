@@ -17,3 +17,8 @@
   when:
     - prometheus_enable | bool
     - prometheus_type in ['docker', 'systemd']
+- name: setup cadvisor
+  include_tasks: "prometheus-{{cadvisor_type}}.yml"
+  when:
+    - cadvisor_enable | bool
+    - cadvisor_type in ['docker', 'systemd']
