@@ -7,25 +7,27 @@ node_exporter_enable: true
 node_exporter_type: systemd
 # ------- docker --------
 
-node_exporter_nets_name: 
-
 node_exporter_image_tag: v1.6.1
 
 node_exporter_restart_policy: on-failure
 
 node_exporter_hostname: node-exporter
+
+node_exporter_nets_name: 
 # =======================
 #  prometheus variables
 # =======================
 prometheus_enable: false
+prometheus_type: docker
+
 # ------- docker --------
 prometheus_image_tag: v2.47.1
-
-prometheus_networks:
 
 prometheus_restart_policy: on-failure
 
 traefik_enable: true
+
+prometheus_networks:
 # ============================
 #  blackbox exporter variables
 # ============================

@@ -1,5 +1,5 @@
 services:
-{% if prometheus_enable %}
+{% if prometheus_enable and prometheus_type == "docker" %}
   prometheus:
     image: prom/prometheus:${PROMETHEUS_TAG}
     restart: ${PROMETHEUS_RESTART_POLICY}
@@ -37,7 +37,7 @@ services:
       - traefik.http.services.prometheus.loadbalancer.server.port=9090
   {% endif %}
 {% endif %}
-{% if node_exporter_enable %}
+{% if node_exporter_enable and node_exporter_type == "docker" %}
   node-exporter:
     image: prom/node-exporter:${EXPORTER_TAG}
     restart: ${RESTART_POLICY}
@@ -60,7 +60,7 @@ services:
       {% endfor %}
     {% endfor %}
 {% endif %}
-{% if blackbox_exporter_enable %}
+{% if blackbox_exporter_enable and blackbox_exporter_type == "docker" %}
   blackbox-exporter:
     image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_TAG}
     restart: ${BLACKBOX_RESTART_POLICY}
