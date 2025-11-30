@@ -1,0 +1,16 @@
+---
+- name: Disable firewalld on RedHat-based systems
+  ansible.builtin.systemd:
+    name: firewalld
+    enabled: false
+    state: stopped
+  when: ansible_os_family == "RedHat"
+  ignore_errors: true
+
+- name: Disable ufw on Debian-based systems
+  ansible.builtin.systemd:
+    name: ufw
+    enabled: false
+    state: stopped
+  when: ansible_os_family == "Debian"
+  ignore_errors: true
