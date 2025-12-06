@@ -1,2 +1,7 @@
 ---
 # handlers file for netfilter
+#
+- name: Restart iptables
+  ansible.builtin.systemd:
+    name: iptables.service
+    state: restarted
