@@ -1,2 +1,7 @@
 ---
-# tasks file for gitlab
+# tasks file for prometheus
+- name: setup gitlab
+  include_tasks: "setup-gitlab-{{gitlab_setup_type}}.yml"
+  when: 
+    - gitlab_setup_enable | bool
+    - gitlab_setup_type in ['omnibus', 'systemd']

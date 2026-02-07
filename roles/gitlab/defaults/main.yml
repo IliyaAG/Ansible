@@ -1,2 +1,9 @@
 ---
 # defaults file for gitlab
+#
+#=========== setup variables ==========
+#
+#
+setup_type: omnibus
+
+
