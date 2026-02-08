@@ -6,4 +6,4 @@
 #
 setup_type: omnibus
 
-
+service_dir: /opt/gitlab
